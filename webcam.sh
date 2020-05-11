@@ -2,6 +2,7 @@
 # Install
 # https://github.com/umlaeute/v4l2loopback
 # apt install v4l2loopback-dkms
+# modprobe v4l2loopback
 # ----------------------------------------
 # 
 # Examples:
