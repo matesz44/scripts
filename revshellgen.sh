@@ -9,10 +9,7 @@
 
 setup() {
     tun0_ip=$(ip addr show tun0 2> /dev/null | grep -Po 'inet \K[\d.]+')
-    echo $tun0_ip
-    
     port="$($1 | dmenu -p "Gimme a port u wanna listen on")"
-    echo $port
 }
 
 revshellz() {
