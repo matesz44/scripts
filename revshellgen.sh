@@ -141,7 +141,7 @@ lua2x_text="lua2x (both platforms (win & lin)) -> $lua2x_shell"
 # ---
 
 # The Juicy part
-case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashudp1_text\\n$socat1_text\\n$perllin1_text\\n$perllin2_text\\n$perlwin1_text\\n$pythonipv4lin1_text\\n$pythonipv4lin2_text\\n$pythonipv4lin3_text\\n$pythonipv6lin1_text\\n$pythonipv4win1_text\\n$phplin1_text\\n$phplin2_text\\n$phplin3_text\\n$phplin4_text\\n$phplin5_text\\n$phplin6_text\\n$phplin7_text\\n$rubylin1_text\\n$rubylin2_text\\n$rubywin1_text\\n$golanglin1_text\\n$nc1_text\\n$nc2_text\\n$nc3_text\\n$ncat1_text\\n$ncatudp1_text\\n$openssl1_text\\n$powershell1_text\\n$powershell2_text\\n$powershell3_text\\n$awk1_text\\n$javalin1_text\\n\\n$javawin1_text\\n$javastealth1_text\\n$war1_text\\n$lua1lin_text\\n$lua2x_text" | dmenu -l 15 -i -p "R3vSh3LLZ")" in
+case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashudp1_text\\n$socat1_text\\n$perllin1_text\\n$perllin2_text\\n$perlwin1_text\\n$pythonipv4lin1_text\\n$pythonipv4lin2_text\\n$pythonipv4lin3_text\\n$pythonipv6lin1_text\\n$pythonipv4win1_text\\n$phplin1_text\\n$phplin2_text\\n$phplin3_text\\n$phplin4_text\\n$phplin5_text\\n$phplin6_text\\n$phplin7_text\\n$rubylin1_text\\n$rubylin2_text\\n$rubywin1_text\\n$golanglin1_text\\n$nc1_text\\n$nc2_text\\n$nc3_text\\n$ncat1_text\\n$ncatudp1_text\\n$openssl1_text\\n$powershell1_text\\n$powershell2_text\\n$powershell3_text\\n$awk1_text\\n$javalin1_text\\n$javawin1_text\\n$javastealth1_text\\n$war1_text\\n$lua1lin_text\\n$lua2x_text" | dmenu -l 15 -i -p "R3vSh3LLZ")" in
 
     ## bash
     "$bashtcp1_text") echo -n "$bashtcp1_shell" | xclip -selection clipboard ;;
