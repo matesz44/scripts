@@ -108,7 +108,7 @@ phplin5_text="ph5 (passthru) -> $phplin5_shell"
 phplin6_text="ph6 (popen) -> $phplin6_shell"
 phplin7_text="ph7 (proc_open) -> $phplin7_shell"
 ## ruby
-rubylin1_text="rbl1 (default)" # with %d dmenu would be buggy(replaced %d with 0)
+rubylin1_text="rbl1 (default)" # with %d dmenu would be buggy(it replaces %d with 0)
 rubylin2_text="rbl2 -> $rubylin2_shell"
 rubywin1_text="rbw1 -> $rubywin1_shell"
 ## go
@@ -172,7 +172,7 @@ case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashudp1_text\\n$socat1_text\
     "$phplin6_text") echo -n "$phplin6_shell" | xclip -selection clipboard ;;
     "$phplin7_text") echo -n "$phplin7_shell" | xclip -selection clipboard ;;
 
-    ## ruby(1st -> buggy(port) cuz dmenu doesnt like %d's xdd)
+    ## ruby(1st -> buggy(copy) cuz dmenu doesnt like %d's xdd)
     "$rubylin1_text") echo -n "$rubylin1_shell" | xclip -selection clipboard ;;
     "$rubylin2_text") echo -n "$rubylin2_shell" | xclip -selection clipboard ;;
     "$rubywin1_text") echo -n "$rubywin1_shell" | xclip -selection clipboard ;;
