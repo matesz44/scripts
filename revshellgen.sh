@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# TODO:
+# Other shells(nodejs, groovy, c, meterpreter ones, +tty shell spawner(separate script))
+
 # -- Just a dmenu wrapper --
 # It just needs a port and a revshell type
 # and u get a revshell with ur tun0 ip and
