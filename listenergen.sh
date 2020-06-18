@@ -38,7 +38,6 @@ case "$(printf "$nc1_text\\n$ncx_text\\n$ncu_text\\n$socat_text\\n$openssl_text\
     "$nc1_text") echo -n "$nc1_shell" | xclip -selection clipboard ;;
     "$ncx_text") echo -n "$ncx_shell" | xclip -selection clipboard ;;
     "$ncu_text") echo -n "$ncu_shell" | xclip -selection clipboard ;;
-    "$ncxx_text") echo -n "$ncxx_shell" | xclip -selection clipboard ;;
     
     ## socat
     "$socat_text") echo -n "$socat_shell" | xclip -selection clipboard ;;
