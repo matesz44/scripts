@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # TODO:
-# Other shells(nodejs, groovy, c, meterpreter ones, +tty shell spawner(separate script))
+# tty shell spawner
 
 # -- Just a dmenu wrapper --
 # It just needs a port and a revshell type
