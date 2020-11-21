@@ -22,8 +22,14 @@ signature=$(echo $jwt | cut -d. -f3)
 header_dec=$(echo $header | base64 -d 2>/dev/null)
 payload_dec=$(echo $payload | base64 -d 2>/dev/null)
 
-echo "$header\n$header_dec"
-echo "$payload\n$payload_dec"
+header_dec_jq=$(echo $header_dec | jq)
+payload_dec_jq=$(echo $payload_dec | jq)
+
+echo "HEADER:"
+echo "$header\n$header_dec\n$header_dec_jq"
+echo "PAYLOAD:"
+echo "$payload\n$payload_dec\n$payload_dec_jq"
+echo "SIGNATURE:"
 echo $signature
 
 echo "------"
