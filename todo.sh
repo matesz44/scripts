@@ -6,7 +6,7 @@
 # add it.
 #
 
-file="$HOME/.todo.lst"
+file="$HOME/.todo.txt"
 touch "$file"
 height=$(wc -l "$file" | awk '{print $1}')
 prompt="Add/delete a task: "
