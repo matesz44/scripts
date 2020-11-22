@@ -12,7 +12,6 @@
 password=$(find ~/.password-store/ -type f -name '*.gpg' |
     sed 's/.*\/\.password-store\/\(.*\)\.gpg$/\1/' | 
     dmenu -i)
-echo $password
 
 case $password in
     *-otp) pass otp show -c $password ;;
