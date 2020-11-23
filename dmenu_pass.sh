@@ -10,11 +10,11 @@
 # let me know :D
 
 password=$(find ~/.password-store/ -type f -name '*.gpg' |
-    sed 's/.*\/\.password-store\/\(.*\)\.gpg$/\1/' | 
+    sed 's/.*\/\.password-store\/\(.*\)\.gpg$/\1/' |
     dmenu -i)
 
 case $password in
-    *-otp) pass otp show -c $password ;;
-    */*) pass show -c $password ;;
+    *-otp) pass otp show -c "$password" ;;
+    */*) pass show -c "$password" ;;
     *) exit 0 ;;
 esac

@@ -12,7 +12,7 @@ port="$($1 | dmenu -p "Gimme a port u wanna listen on")"
 
 # Replace vars if they are empty
 case "" in
-    $port) port=1234 ;;
+    "$port") port=1234 ;;
 esac
 
 # Listener copypasta
