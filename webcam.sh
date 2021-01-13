@@ -8,6 +8,7 @@
 # Examples:
 # Image
 # static img: ffmpeg -loop 1 -re -i foo.jpg -f v4l2 -vcodec rawvideo -pix_fmt yuv420p /dev/video0
+# gif: ffmpeg -ignore_loop 0 -t 0 -re -i giphy.gif -f v4l2 -vcodec rawvideo -pix_fmt yuv420p /dev/video0
 # Video
 # webcam gandalf.mp4 /dev/video0
 while true;
