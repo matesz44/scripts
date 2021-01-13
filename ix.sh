@@ -1,0 +1,13 @@
+#!/bin/sh
+
+# The world's best pastebin terminal replacement. I'm so in love.  You
+# can call this from *within* vi!
+
+if [ -n "$1" ]; then
+	exec curl -s "ix.io/$1"
+fi
+
+url=$(curl -s -F 'f:1=<-' http://ix.io)
+echo "$url"
+which xclip >/dev/null || exit 0
+echo -n "$url" | xclip -selection clipboard
