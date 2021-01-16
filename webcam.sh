@@ -11,7 +11,8 @@
 # gif: ffmpeg -ignore_loop 0 -t 0 -re -i giphy.gif -f v4l2 -vcodec rawvideo -pix_fmt yuv420p /dev/video0
 # Video
 # webcam gandalf.mp4 /dev/video0
-while true;
-do ffmpeg -re -i "$1" -f v4l2 "$2"
+while true
+do 
+    ffmpeg -re -i "$1" -f v4l2 "$2"
 done
 
