@@ -15,6 +15,5 @@ password=$(find ~/.password-store/ -type f -name '*.gpg' |
 
 case $password in
     *-otp) pass otp show -c "$password" ;;
-    */*) pass show -c "$password" ;;
-    *) exit 0 ;;
+    *) pass show -c "$password" ;;
 esac
